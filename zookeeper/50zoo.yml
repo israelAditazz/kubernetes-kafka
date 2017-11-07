@@ -27,12 +27,20 @@ spec:
               name: leader-election
           volumeMounts:
             - name: datadir
-              mountPath: /data
+              mountPath: /var/lib/zookeeper
             # There's defaults in this folder, such as logging config
             #- name: conf
             #  mountPath: /conf
-      volumes:
-        #- name: conf
-        #  emptyDir: {}
-        - name: datadir
-          emptyDir: {}
+        volumes:
+          - name: datadir
+        persistentVolumeClaim:
+          claimName: datadir-pv-claim
+     volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes: 
+        -ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi
